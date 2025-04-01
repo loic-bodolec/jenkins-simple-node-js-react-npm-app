@@ -31,19 +31,19 @@ pipeline {
                 }
             }
         }
-        stage('Deliver') {
-            steps {
-                script {
-                    try {
-                        sh './jenkins/scripts/deliver.sh'
-                        input message: 'Finished using the web site? (Click "Proceed" to continue)'
-                        sh './jenkins/scripts/kill.sh'
-                    } catch (Exception e) {
-                        currentBuild.result = 'FAILURE'
-                        throw e
-                    }
-                }
-            }
-        }
+        // stage('Deliver') {
+        //     steps {
+        //         script {
+        //             try {
+        //                 sh './jenkins/scripts/deliver.sh'
+        //                 input message: 'Finished using the web site? (Click "Proceed" to continue)'
+        //                 sh './jenkins/scripts/kill.sh'
+        //             } catch (Exception e) {
+        //                 currentBuild.result = 'FAILURE'
+        //                 throw e
+        //             }
+        //         }
+        //     }
+        // }
     }
 }
