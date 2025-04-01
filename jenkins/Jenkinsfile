@@ -1,26 +1,48 @@
 pipeline {
-    agent {
-        label 'docker'
-    }
+    agent any
+    // agent {
+    //     label 'docker' // Assurez-vous que cet agent avec label 'docker' est disponible, ou utilisez 'any'
+    // }
     environment {
         CI = 'true'
     }
     stages {
         stage('Build') {
             steps {
-                sh 'npm install'
+                script {
+                    try {
+                        sh 'npm install'
+                    } catch (Exception e) {
+                        currentBuild.result = 'FAILURE'
+                        throw e
+                    }
+                }
             }
         }
         stage('Test') {
             steps {
-                sh './jenkins/scripts/test.sh'
+                script {
+                    try {
+                        sh './jenkins/scripts/test.sh'
+                    } catch (Exception e) {
+                        currentBuild.result = 'FAILURE'
+                        throw e
+                    }
+                }
             }
         }
         stage('Deliver') {
             steps {
-                sh './jenkins/scripts/deliver.sh'
-                input message: 'Finished using the web site? (Click "Proceed" to continue)'
-                sh './jenkins/scripts/kill.sh'
+                script {
+                    try {
+                        sh './jenkins/scripts/deliver.sh'
+                        input message: 'Finished using the web site? (Click "Proceed" to continue)'
+                        sh './jenkins/scripts/kill.sh'
+                    } catch (Exception e) {
+                        currentBuild.result = 'FAILURE'
+                        throw e
+                    }
+                }
             }
         }
     }
